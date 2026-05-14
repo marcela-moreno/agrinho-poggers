@@ -1,85 +1,84 @@
-const container = document.getElementById('game-container');
-const scoreEl = document.getElementById('score');
-const timerEl = document.getElementById('timer');
+const canvas = document.getElementById('field-canvas');
+const scoreEl = document.getElementById('score-val');
+const timerEl = document.getElementById('timer-val');
 const startBtn = document.getElementById('start-btn');
-const overlay = document.getElementById('overlay');
+const overlay = document.getElementById('game-overlay');
 
 let score = 0;
 let time = 30;
-let gameActive = false;
+let isPlaying = false;
 
-const targets = [
-    { icon: '🌿', pts: 10 }, // Soja
-    { icon: '🌱', pts: 10 }, // Broto
-    { icon: '🛸', pts: 25 }, // Drone Tech
-    { icon: '🐛', pts: -20 }, // Praga
-    { icon: '🔥', pts: -50 }  // Queimada
+// Itens: Emoji, Pontos, Probabilidade de aparecer
+const gameItems = [
+    { emoji: '🌿', pts: 10 },  // Soja Saudável
+    { emoji: '🌱', pts: 10 },  // Broto
+    { emoji: '🛸', pts: 30 },  // Drone de Tecnologia
+    { emoji: '🐛', pts: -50 }, // Praga (Não clicar!)
+    { emoji: '🔥', pts: -100 } // Queimada (Não clicar!)
 ];
 
-function createTarget() {
-    if (!gameActive) return;
+function spawnItem() {
+    if (!isPlaying) return;
 
-    const data = targets[Math.floor(Math.random() * targets.length)];
-    const div = document.createElement('div');
+    const item = document.createElement('div');
+    const data = gameItems[Math.floor(Math.random() * gameItems.length)];
     
-    div.className = 'game-obj';
-    div.innerText = data.icon;
+    item.className = 'soy-target';
+    item.innerText = data.emoji;
     
-    // Posição segura dentro do container
-    const x = Math.random() * (container.clientWidth - 60);
-    const y = Math.random() * (container.clientHeight - 60);
+    const x = Math.random() * (canvas.clientWidth - 70);
+    const y = Math.random() * (canvas.clientHeight - 70);
     
-    div.style.left = `${x}px`;
-    div.style.top = `${y}px`;
+    item.style.left = `${x}px`;
+    item.style.top = `${y}px`;
 
-    div.onclick = (e) => {
+    item.onclick = (e) => {
         e.stopPropagation();
         score += data.pts;
         scoreEl.innerText = score;
-        
-        // Efeito visual rápido
-        div.style.transform = 'scale(1.5)';
-        setTimeout(() => div.remove(), 100);
+        item.style.transform = 'scale(0)';
+        setTimeout(() => item.remove(), 100);
     };
 
-    container.appendChild(div);
+    canvas.appendChild(item);
 
-    // Tempo de vida do objeto na tela (fica mais rápido conforme o tempo passa)
-    const lifespan = time > 15 ? 1500 : 1000;
-    setTimeout(() => { if(div) div.remove(); }, lifespan);
+    // Some após 1.2 segundos se não clicar
+    setTimeout(() => { if(item) item.remove(); }, 1200);
 }
 
-function startGame() {
+function runGame() {
     score = 0;
     time = 30;
-    gameActive = true;
+    isPlaying = true;
     scoreEl.innerText = score;
     timerEl.innerText = time;
     overlay.style.display = 'none';
 
-    const loop = setInterval(() => {
-        createTarget();
-        if (Math.random() > 0.5) createTarget(); // Dobra a dificuldade às vezes
-    }, 800);
+    // Loop de criação de itens
+    const gameInterval = setInterval(() => {
+        spawnItem();
+        if (time < 10) spawnItem(); // Fica mais difícil no final
+    }, 700);
 
-    const countdown = setInterval(() => {
+    // Loop do Cronômetro
+    const timerInterval = setInterval(() => {
         time--;
         timerEl.innerText = time;
 
         if (time <= 0) {
-            clearInterval(loop);
-            clearInterval(countdown);
-            endGame();
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            isPlaying = false;
+            finishGame();
         }
     }, 1000);
 }
 
-function endGame() {
-    gameActive = false;
-    alert(`Operação Concluída!\nPontuação de Sustentabilidade: ${score}`);
+function finishGame() {
+    alert("Operação Finalizada!\nPontuação de Sustentabilidade: " + score);
     overlay.style.display = 'flex';
-    startBtn.innerText = 'REINICIAR OPERAÇÃO';
-    document.querySelectorAll('.game-obj').forEach(obj => obj.remove());
+    startBtn.innerText = 'Reiniciar Colheita Digital';
+    document.querySelectorAll('.soy-target').forEach(i => i.remove());
 }
 
-startBtn.addEventListener('click', startGame);
+startBtn.onclick = runGame;
