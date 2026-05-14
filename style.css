@@ -1,74 +1,61 @@
 :root {
-    --primary: #55a630;
+    --primary: #38b000;
+    --dark: #001a11;
     --accent: #ccff33;
-    --dark: #0b0d0b;
-    --card: #1a1d1a;
-    --white: #edede9;
+    --glass: rgba(255, 255, 255, 0.1);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--dark);
-    color: var(--white);
-    overflow-x: hidden;
+    font-family: 'Outfit', sans-serif;
+    background: var(--dark);
+    color: white;
+    margin: 0;
 }
 
-header {
-    height: 50vh;
-    padding: 2rem 5%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent),
+.main-header {
+    height: 60vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                 url('https://images.unsplash.com/photo-1559812484-97e029e3776f?auto=format&fit=crop&w=1600&q=80');
     background-size: cover;
     background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
-.logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; }
 .logo span { color: var(--primary); }
 
-.hero h1 { font-size: 3.5rem; margin-top: 5rem; line-height: 1; }
-.hero h1 span { color: var(--primary); }
+.container { max-width: 1100px; margin: -100px auto 50px; padding: 20px; }
 
 /* JOGO */
-.game-wrapper {
-    max-width: 1000px;
-    margin: -5rem auto 3rem;
-    padding: 2rem;
-    background: var(--card);
-    border-radius: 20px;
+.game-section {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 30px;
     border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 40px;
 }
 
-.dashboard {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin: 1.5rem 0;
-}
+.scoreboard { display: flex; gap: 20px; justify-content: center; margin: 20px 0; }
+.score-card { background: #000; padding: 10px 20px; border-radius: 50px; border: 1px solid var(--primary); }
 
-.stat {
-    background: var(--dark);
-    padding: 0.8rem 1.5rem;
-    border-radius: 10px;
-    border: 1px solid var(--primary);
-    font-weight: bold;
-}
-
-#game-container {
+#field-canvas {
     width: 100%;
     height: 450px;
-    background: #050605;
-    border-radius: 15px;
+    background: #05100a;
+    border-radius: 20px;
     position: relative;
     overflow: hidden;
-    border: 2px solid #222;
+    cursor: crosshair;
 }
 
-#overlay {
+#game-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,43 +63,47 @@ header {
 }
 
 #start-btn {
-    padding: 1.2rem 3rem;
+    padding: 15px 40px;
+    font-size: 1.2rem;
     background: var(--primary);
-    border: none;
     color: white;
-    font-weight: bold;
+    border: none;
     border-radius: 50px;
     cursor: pointer;
+    font-weight: bold;
     transition: 0.3s;
 }
 
-#start-btn:hover { background: var(--accent); color: black; transform: scale(1.1); }
+#start-btn:hover { background: var(--accent); color: #000; transform: scale(1.1); }
 
-.game-obj {
+.soy-target {
     position: absolute;
     font-size: 50px;
-    cursor: pointer;
-    transition: transform 0.2s;
     user-select: none;
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* CARDS */
-.content-grid {
+@keyframes pop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+/* CARDS DE CONTEÚDO */
+.soy-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 0 5% 5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
 }
 
 .info-card {
-    background: var(--card);
-    border-radius: 15px;
+    background: #000;
+    border-radius: 20px;
     overflow: hidden;
-    transition: 0.3s;
+    border: 1px solid #222;
 }
 
-.info-card img { width: 100%; height: 200px; object-fit: cover; }
-.card-content { padding: 1.5rem; }
-.info-card h3 { color: var(--primary); margin-bottom: 0.5rem; }
+.info-card img { width: 100%; height: 250px; object-fit: cover; }
+.info-content { padding: 20px; }
+.info-content h3 { color: var(--primary); margin-bottom: 10px; }
 
-footer { text-align: center; padding: 2rem; border-top: 1px solid #222; opacity: 0.6; }
+footer { text-align: center; padding: 50px; opacity: 0.5; }
