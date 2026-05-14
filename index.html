@@ -1,10 +1,42 @@
-<section class="game-container">
-    <h2>Mini-Game: Missão Sustentabilidade</h2>
-    <p>Clique nos itens sustentáveis para somar pontos! Cuidado com o desperdício.</p>
-    <div id="game-canvas">
-        <div id="score">Pontos: 0</div>
-        <button id="start-btn">Começar Jogo</button>
-    </div>
-</section>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrinho 2026 - Agro Sustentável</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
 
-<script src="script.js"></script>
+    <header>
+        <h1>Agro Forte, Futuro Sustentável</h1>
+        <p>Inovação tecnológica e preservação ambiental</p>
+    </header>
+
+    <main class="container">
+        <section class="info">
+            <h2>O Desafio da Sustentabilidade</h2>
+            <p>O projeto Agrinho incentiva o uso da tecnologia para produzir mais, utilizando menos recursos naturais.</p>
+        </section>
+
+        <section class="game-box">
+            <h3>Jogo da Sustentabilidade</h3>
+            <p>Clique nos itens <strong>BONS</strong> (Drones, Água, Plantas) e evite o <strong>FOGO</strong>!</p>
+            <div id="game-area">
+                <div id="ui">
+                    <span>Pontos: <strong id="score-val">0</strong></span>
+                    <span id="timer">Tempo: <strong id="time-val">20</strong>s</span>
+                </div>
+                <button id="btn-start">Começar Missão</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Projeto Agrinho - Programação Ensino Médio</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
