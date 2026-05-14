@@ -3,39 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agrinho 2026 - Agro Sustentável</title>
+    <title>Agrinho 2026 | Futuro Sustentável</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <h1>Agro Forte, Futuro Sustentável</h1>
-        <p>Inovação tecnológica e preservação ambiental</p>
+    <div class="blob"></div> <header>
+        <div class="hero-content">
+            <span class="badge">Projeto Agrinho 2026</span>
+            <h1>Agro Forte <br><span>Futuro Sustentável</span></h1>
+            <p>Onde a tecnologia e a preservação se encontram para alimentar o mundo.</p>
+        </div>
     </header>
 
     <main class="container">
-        <section class="info">
-            <h2>O Desafio da Sustentabilidade</h2>
-            <p>O projeto Agrinho incentiva o uso da tecnologia para produzir mais, utilizando menos recursos naturais.</p>
+        <section class="game-section">
+            <div class="game-header">
+                <h2>Missão Sustentabilidade</h2>
+                <div class="stats">
+                    <div class="stat-item">Pontos: <span id="score">0</span></div>
+                    <div class="stat-item">Tempo: <span id="timer">20</span>s</div>
+                </div>
+            </div>
+            
+            <div id="game-canvas">
+                <div id="start-screen">
+                    <button id="start-btn">Iniciar Missão Digital</button>
+                </div>
+            </div>
         </section>
 
-        <section class="game-box">
-            <h3>Jogo da Sustentabilidade</h3>
-            <p>Clique nos itens <strong>BONS</strong> (Drones, Água, Plantas) e evite o <strong>FOGO</strong>!</p>
-            <div id="game-area">
-                <div id="ui">
-                    <span>Pontos: <strong id="score-val">0</strong></span>
-                    <span id="timer">Tempo: <strong id="time-val">20</strong>s</span>
-                </div>
-                <button id="btn-start">Começar Missão</button>
+        <section class="info-grid">
+            <div class="glass-card">
+                <h3>Monitoramento 4.0</h3>
+                <p>Uso de inteligência artificial para prever colheitas e evitar pragas.</p>
+            </div>
+            <div class="glass-card">
+                <h3>Preservação Hídrica</h3>
+                <p>Algoritmos de irrigação que reduzem o uso de água em 40%.</p>
             </div>
         </section>
     </main>
-
-    <footer>
-        <p>&copy; 2026 Projeto Agrinho - Programação Ensino Médio</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
