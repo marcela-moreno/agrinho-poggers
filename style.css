@@ -1,85 +1,118 @@
-const container = document.getElementById('game-container');
-const scoreEl = document.getElementById('score');
-const timerEl = document.getElementById('timer');
-const startBtn = document.getElementById('start-btn');
-const overlay = document.getElementById('overlay');
-
-let score = 0;
-let time = 30;
-let gameActive = false;
-
-const targets = [
-    { icon: '🌿', pts: 10 }, // Soja
-    { icon: '🌱', pts: 10 }, // Broto
-    { icon: '🛸', pts: 25 }, // Drone Tech
-    { icon: '🐛', pts: -20 }, // Praga
-    { icon: '🔥', pts: -50 }  // Queimada
-];
-
-function createTarget() {
-    if (!gameActive) return;
-
-    const data = targets[Math.floor(Math.random() * targets.length)];
-    const div = document.createElement('div');
-    
-    div.className = 'game-obj';
-    div.innerText = data.icon;
-    
-    // Posição segura dentro do container
-    const x = Math.random() * (container.clientWidth - 60);
-    const y = Math.random() * (container.clientHeight - 60);
-    
-    div.style.left = `${x}px`;
-    div.style.top = `${y}px`;
-
-    div.onclick = (e) => {
-        e.stopPropagation();
-        score += data.pts;
-        scoreEl.innerText = score;
-        
-        // Efeito visual rápido
-        div.style.transform = 'scale(1.5)';
-        setTimeout(() => div.remove(), 100);
-    };
-
-    container.appendChild(div);
-
-    // Tempo de vida do objeto na tela (fica mais rápido conforme o tempo passa)
-    const lifespan = time > 15 ? 1500 : 1000;
-    setTimeout(() => { if(div) div.remove(); }, lifespan);
+:root {
+    --primary: #55a630;
+    --accent: #ccff33;
+    --dark: #0b0d0b;
+    --card: #1a1d1a;
+    --white: #edede9;
 }
 
-function startGame() {
-    score = 0;
-    time = 30;
-    gameActive = true;
-    scoreEl.innerText = score;
-    timerEl.innerText = time;
-    overlay.style.display = 'none';
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    const loop = setInterval(() => {
-        createTarget();
-        if (Math.random() > 0.5) createTarget(); // Dobra a dificuldade às vezes
-    }, 800);
-
-    const countdown = setInterval(() => {
-        time--;
-        timerEl.innerText = time;
-
-        if (time <= 0) {
-            clearInterval(loop);
-            clearInterval(countdown);
-            endGame();
-        }
-    }, 1000);
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dark);
+    color: var(--white);
+    overflow-x: hidden;
 }
 
-function endGame() {
-    gameActive = false;
-    alert(`Operação Concluída!\nPontuação de Sustentabilidade: ${score}`);
-    overlay.style.display = 'flex';
-    startBtn.innerText = 'REINICIAR OPERAÇÃO';
-    document.querySelectorAll('.game-obj').forEach(obj => obj.remove());
+header {
+    height: 50vh;
+    padding: 2rem 5%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent),
+                url('https://images.unsplash.com/photo-1559812484-97e029e3776f?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
 }
 
-startBtn.addEventListener('click', startGame);
+.logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; }
+.logo span { color: var(--primary); }
+
+.hero h1 { font-size: 3.5rem; margin-top: 5rem; line-height: 1; }
+.hero h1 span { color: var(--primary); }
+
+/* JOGO */
+.game-wrapper {
+    max-width: 1000px;
+    margin: -5rem auto 3rem;
+    padding: 2rem;
+    background: var(--card);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dashboard {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.stat {
+    background: var(--dark);
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--primary);
+    font-weight: bold;
+}
+
+#game-container {
+    width: 100%;
+    height: 450px;
+    background: #050605;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #222;
+}
+
+#overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#start-btn {
+    padding: 1.2rem 3rem;
+    background: var(--primary);
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#start-btn:hover { background: var(--accent); color: black; transform: scale(1.1); }
+
+.game-obj {
+    position: absolute;
+    font-size: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    user-select: none;
+}
+
+/* CARDS */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 5% 5rem;
+}
+
+.info-card {
+    background: var(--card);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.info-card img { width: 100%; height: 200px; object-fit: cover; }
+.card-content { padding: 1.5rem; }
+.info-card h3 { color: var(--primary); margin-bottom: 0.5rem; }
+
+footer { text-align: center; padding: 2rem; border-top: 1px solid #222; opacity: 0.6; }
