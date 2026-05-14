@@ -1,84 +1,62 @@
-const canvas = document.getElementById('field-canvas');
-const scoreEl = document.getElementById('score-val');
-const timerEl = document.getElementById('timer-val');
+const campo = document.getElementById('campo');
+const scoreDisplay = document.getElementById('score');
+const timerDisplay = document.getElementById('timer');
 const startBtn = document.getElementById('start-btn');
-const overlay = document.getElementById('game-overlay');
 
 let score = 0;
-let time = 30;
-let isPlaying = false;
+let timeLeft = 30;
+let gameActive = false;
 
-// Itens: Emoji, Pontos, Probabilidade de aparecer
-const gameItems = [
-    { emoji: '🌿', pts: 10 },  // Soja Saudável
-    { emoji: '🌱', pts: 10 },  // Broto
-    { emoji: '🛸', pts: 30 },  // Drone de Tecnologia
-    { emoji: '🐛', pts: -50 }, // Praga (Não clicar!)
-    { emoji: '🔥', pts: -100 } // Queimada (Não clicar!)
+const itens = [
+    { emoji: '🌿', pts: 10 }, // Soja
+    { emoji: '🛸', pts: 20 }, // Drone
+    { emoji: '🔥', pts: -30 } // Fogo (Perde pontos)
 ];
 
-function spawnItem() {
-    if (!isPlaying) return;
+function criarItem() {
+    if (!gameActive) return;
 
-    const item = document.createElement('div');
-    const data = gameItems[Math.floor(Math.random() * gameItems.length)];
-    
-    item.className = 'soy-target';
-    item.innerText = data.emoji;
-    
-    const x = Math.random() * (canvas.clientWidth - 70);
-    const y = Math.random() * (canvas.clientHeight - 70);
-    
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
+    const itemData = itens[Math.floor(Math.random() * itens.length)];
+    const div = document.createElement('div');
+    div.className = 'alvo';
+    div.innerText = itemData.emoji;
 
-    item.onclick = (e) => {
+    const x = Math.random() * (campo.clientWidth - 50);
+    const y = Math.random() * (campo.clientHeight - 50);
+
+    div.style.left = x + 'px';
+    div.style.top = y + 'px';
+
+    div.onclick = (e) => {
         e.stopPropagation();
-        score += data.pts;
-        scoreEl.innerText = score;
-        item.style.transform = 'scale(0)';
-        setTimeout(() => item.remove(), 100);
+        score += itemData.pts;
+        scoreDisplay.innerText = score;
+        div.remove();
     };
 
-    canvas.appendChild(item);
-
-    // Some após 1.2 segundos se não clicar
-    setTimeout(() => { if(item) item.remove(); }, 1200);
+    campo.appendChild(div);
+    setTimeout(() => div.remove(), 1500);
 }
 
-function runGame() {
+startBtn.onclick = () => {
     score = 0;
-    time = 30;
-    isPlaying = true;
-    scoreEl.innerText = score;
-    timerEl.innerText = time;
-    overlay.style.display = 'none';
+    timeLeft = 30;
+    gameActive = true;
+    scoreDisplay.innerText = score;
+    timerDisplay.innerText = timeLeft;
+    startBtn.style.display = 'none';
 
-    // Loop de criação de itens
-    const gameInterval = setInterval(() => {
-        spawnItem();
-        if (time < 10) spawnItem(); // Fica mais difícil no final
-    }, 700);
-
-    // Loop do Cronômetro
-    const timerInterval = setInterval(() => {
-        time--;
-        timerEl.innerText = time;
-
-        if (time <= 0) {
-            clearInterval(gameInterval);
-            clearInterval(timerInterval);
-            isPlaying = false;
-            finishGame();
+    const jogo = setInterval(criarItem, 800);
+    const relogio = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(jogo);
+            clearInterval(relogio);
+            gameActive = false;
+            alert("Fim da colheita! Pontos: " + score);
+            startBtn.style.display = 'block';
+            startBtn.innerText = "Jogar Novamente";
         }
     }, 1000);
-}
-
-function finishGame() {
-    alert("Operação Finalizada!\nPontuação de Sustentabilidade: " + score);
-    overlay.style.display = 'flex';
-    startBtn.innerText = 'Reiniciar Colheita Digital';
-    document.querySelectorAll('.soy-target').forEach(i => i.remove());
-}
-
-startBtn.onclick = runGame;
+};
