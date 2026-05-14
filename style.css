@@ -1,47 +1,82 @@
-/* Estilos do Jogo */
-.game-container {
+:root {
+    --verde: #2d6a4f;
+    --terra: #764134;
+    --fundo: #f0f2f5;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--fundo);
+    margin: 0;
     text-align: center;
-    margin-top: 50px;
-    padding: 20px;
-    background: #e8f5e9;
-    border-radius: 15px;
 }
 
-#game-canvas {
-    width: 100%;
-    height: 400px;
-    background: #fff;
-    border: 2px solid var(--verde-principal);
-    position: relative;
-    overflow: hidden;
+header {
+    background: var(--verde);
+    color: white;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 800px;
     margin: 20px auto;
-    cursor: crosshair;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-#score {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+/* ESTILO DO JOGO */
+.game-box {
+    margin-top: 30px;
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+
+#game-area {
+    width: 100%;
+    height: 350px;
+    background: #e8f5e9;
+    border: 3px solid var(--verde);
+    border-radius: 10px;
+    position: relative; /* Essencial para o JS posicionar os itens */
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+#ui {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(255,255,255,0.8);
     font-weight: bold;
-    font-size: 1.2rem;
-    color: var(--verde-escuro);
 }
 
-.target {
+.item-jogo {
     position: absolute;
     font-size: 40px;
     cursor: pointer;
     user-select: none;
-    transition: transform 0.1s;
+    z-index: 10;
 }
 
-#start-btn {
+#btn-start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 15px 30px;
-    font-size: 1.2rem;
-    background: var(--verde-principal);
+    background: var(--verde);
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 1.2rem;
     cursor: pointer;
-    margin-top: 150px;
+    z-index: 20;
+}
+
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    color: #666;
 }
