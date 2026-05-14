@@ -3,48 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agrinho 2026 | Futuro Sustentável</title>
+    <title>Soja Tech | Agrinho 2026</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="blob"></div> <header>
-        <div class="hero-content">
-            <span class="badge">Projeto Agrinho 2026</span>
-            <h1>Agro Forte <br><span>Futuro Sustentável</span></h1>
-            <p>Onde a tecnologia e a preservação se encontram para alimentar o mundo.</p>
+    <div class="background-overlay"></div>
+
+    <header>
+        <nav>
+            <div class="logo">SOJA<span>TECH</span></div>
+            <div class="tagline">Agrinho 2026</div>
+        </nav>
+        <div class="hero">
+            <h1>O Futuro da <span>Soja</span> é Sustentável</h1>
+            <p>Tecnologia e preservação para a maior cultura do Brasil.</p>
         </div>
     </header>
 
-    <main class="container">
-        <section class="game-section">
-            <div class="game-header">
-                <h2>Missão Sustentabilidade</h2>
-                <div class="stats">
-                    <div class="stat-item">Pontos: <span id="score">0</span></div>
-                    <div class="stat-item">Tempo: <span id="timer">20</span>s</div>
+    <main>
+        <section class="game-wrapper">
+            <div class="game-info">
+                <h2>Missão: Colheita Inteligente</h2>
+                <p>Clique na Soja e nos Drones. Evite Pragas e o Fogo!</p>
+                <div class="dashboard">
+                    <div class="stat">PONTOS: <span id="score">0</span></div>
+                    <div class="stat">TEMPO: <span id="timer">30</span>s</div>
                 </div>
             </div>
             
-            <div id="game-canvas">
-                <div id="start-screen">
-                    <button id="start-btn">Iniciar Missão Digital</button>
+            <div id="game-container">
+                <div id="overlay">
+                    <button id="start-btn">INICIAR OPERAÇÃO</button>
                 </div>
             </div>
         </section>
 
-        <section class="info-grid">
-            <div class="glass-card">
-                <h3>Monitoramento 4.0</h3>
-                <p>Uso de inteligência artificial para prever colheitas e evitar pragas.</p>
+        <section class="content-grid">
+            <div class="info-card">
+                <img src="https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=600&q=80" alt="Plantação de Soja">
+                <div class="card-content">
+                    <h3>Ciclo Sustentável</h3>
+                    <p>A soja brasileira utiliza biotecnologia para reduzir o uso de químicos e preservar o solo.</p>
+                </div>
             </div>
-            <div class="glass-card">
-                <h3>Preservação Hídrica</h3>
-                <p>Algoritmos de irrigação que reduzem o uso de água em 40%.</p>
+            <div class="info-card">
+                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=600&q=80" alt="Tecnologia no campo">
+                <div class="card-content">
+                    <h3>Precisão Digital</h3>
+                    <p>Sensores detectam exatamente o que cada planta precisa, economizando água e energia.</p>
+                </div>
             </div>
         </section>
     </main>
+
+    <footer>
+        <p>Projeto para o Concurso Agrinho 2026 - Categoria Programação</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
