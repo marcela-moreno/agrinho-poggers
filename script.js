@@ -1,68 +1,64 @@
-const gameArea = document.getElementById('game-area');
-const scoreDisplay = document.getElementById('score-val');
-const timeDisplay = document.getElementById('time-val');
-const btnStart = document.getElementById('btn-start');
+const canvas = document.getElementById('game-canvas');
+const scoreDisp = document.getElementById('score');
+const timerDisp = document.getElementById('timer');
+const startBtn = document.getElementById('start-btn');
 
 let score = 0;
 let timeLeft = 20;
-let gameInterval;
+let gameRunning = false;
 
-// Itens do jogo: Emoji, Pontos
-const elements = [
-    { txt: '🌱', pts: 10 },
-    { txt: '💧', pts: 10 },
-    { txt: '🛸', pts: 20 }, // Drone
-    { txt: '🔥', pts: -30 } // Evitar!
+const items = [
+    { icon: '🌲', pts: 10 },
+    { icon: '🚜', pts: 15 },
+    { icon: '📡', pts: 20 },
+    { icon: '🔥', pts: -25 }
 ];
 
-function spawnItem() {
+function createItem() {
+    if (!gameRunning) return;
+
     const item = document.createElement('div');
-    const type = elements[Math.floor(Math.random() * elements.length)];
+    const data = items[Math.floor(Math.random() * items.length)];
     
     item.className = 'item-jogo';
-    item.innerText = type.txt;
+    item.innerText = data.icon;
     
-    // Calcula posição aleatória dentro da área do jogo
-    const posX = Math.random() * (gameArea.clientWidth - 50);
-    const posY = Math.random() * (gameArea.clientHeight - 80) + 40;
+    const x = Math.random() * (canvas.clientWidth - 60);
+    const y = Math.random() * (canvas.clientHeight - 60);
+    
+    item.style.left = `${x}px`;
+    item.style.top = `${y}px`;
 
-    item.style.left = posX + 'px';
-    item.style.top = posY + 'px';
-
-    item.onclick = function() {
-        score += type.pts;
-        scoreDisplay.innerText = score;
-        this.remove();
+    item.onclick = () => {
+        score += data.pts;
+        scoreDisp.innerText = score;
+        item.style.transform = 'scale(0)'; // Efeito ao clicar
+        setTimeout(() => item.remove(), 100);
     };
 
-    gameArea.appendChild(item);
-
-    // Remove o item sozinho após 1.5 segundos se ninguém clicar
-    setTimeout(() => { if(item) item.remove(); }, 1500);
+    canvas.appendChild(item);
+    setTimeout(() => { if(item) item.remove(); }, 1200);
 }
 
-function startGame() {
+startBtn.onclick = () => {
     score = 0;
     timeLeft = 20;
-    scoreDisplay.innerText = score;
-    timeDisplay.innerText = timeLeft;
-    btnStart.style.display = 'none';
+    gameRunning = true;
+    scoreDisp.innerText = score;
+    startBtn.parentElement.style.display = 'none';
 
-    gameInterval = setInterval(() => {
-        spawnItem();
+    const timer = setInterval(() => {
         timeLeft--;
-        timeDisplay.innerText = timeLeft;
-
-        if (timeLeft <= 0) {
-            clearInterval(gameInterval);
-            gameActive = false;
-            alert("Fim da Missão! Pontuação final: " + score);
-            btnStart.style.display = 'block';
-            btnStart.innerText = 'Tentar Novamente';
-            // Limpa itens restantes
+        timerDisp.innerText = timeLeft;
+        createItem();
+        
+        if(timeLeft <= 0) {
+            clearInterval(timer);
+            gameRunning = false;
+            alert(`Missão Cumprida! Sua pontuação sustentável: ${score}`);
+            startBtn.parentElement.style.display = 'flex';
+            startBtn.innerText = 'Reiniciar Tecnologia';
             document.querySelectorAll('.item-jogo').forEach(i => i.remove());
         }
     }, 1000);
-}
-
-btnStart.addEventListener('click', startGame);
+};
