@@ -1,64 +1,85 @@
-const canvas = document.getElementById('game-canvas');
-const scoreDisp = document.getElementById('score');
-const timerDisp = document.getElementById('timer');
+const container = document.getElementById('game-container');
+const scoreEl = document.getElementById('score');
+const timerEl = document.getElementById('timer');
 const startBtn = document.getElementById('start-btn');
+const overlay = document.getElementById('overlay');
 
 let score = 0;
-let timeLeft = 20;
-let gameRunning = false;
+let time = 30;
+let gameActive = false;
 
-const items = [
-    { icon: '🌲', pts: 10 },
-    { icon: '🚜', pts: 15 },
-    { icon: '📡', pts: 20 },
-    { icon: '🔥', pts: -25 }
+const targets = [
+    { icon: '🌿', pts: 10 }, // Soja
+    { icon: '🌱', pts: 10 }, // Broto
+    { icon: '🛸', pts: 25 }, // Drone Tech
+    { icon: '🐛', pts: -20 }, // Praga
+    { icon: '🔥', pts: -50 }  // Queimada
 ];
 
-function createItem() {
-    if (!gameRunning) return;
+function createTarget() {
+    if (!gameActive) return;
 
-    const item = document.createElement('div');
-    const data = items[Math.floor(Math.random() * items.length)];
+    const data = targets[Math.floor(Math.random() * targets.length)];
+    const div = document.createElement('div');
     
-    item.className = 'item-jogo';
-    item.innerText = data.icon;
+    div.className = 'game-obj';
+    div.innerText = data.icon;
     
-    const x = Math.random() * (canvas.clientWidth - 60);
-    const y = Math.random() * (canvas.clientHeight - 60);
+    // Posição segura dentro do container
+    const x = Math.random() * (container.clientWidth - 60);
+    const y = Math.random() * (container.clientHeight - 60);
     
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
+    div.style.left = `${x}px`;
+    div.style.top = `${y}px`;
 
-    item.onclick = () => {
+    div.onclick = (e) => {
+        e.stopPropagation();
         score += data.pts;
-        scoreDisp.innerText = score;
-        item.style.transform = 'scale(0)'; // Efeito ao clicar
-        setTimeout(() => item.remove(), 100);
+        scoreEl.innerText = score;
+        
+        // Efeito visual rápido
+        div.style.transform = 'scale(1.5)';
+        setTimeout(() => div.remove(), 100);
     };
 
-    canvas.appendChild(item);
-    setTimeout(() => { if(item) item.remove(); }, 1200);
+    container.appendChild(div);
+
+    // Tempo de vida do objeto na tela (fica mais rápido conforme o tempo passa)
+    const lifespan = time > 15 ? 1500 : 1000;
+    setTimeout(() => { if(div) div.remove(); }, lifespan);
 }
 
-startBtn.onclick = () => {
+function startGame() {
     score = 0;
-    timeLeft = 20;
-    gameRunning = true;
-    scoreDisp.innerText = score;
-    startBtn.parentElement.style.display = 'none';
+    time = 30;
+    gameActive = true;
+    scoreEl.innerText = score;
+    timerEl.innerText = time;
+    overlay.style.display = 'none';
 
-    const timer = setInterval(() => {
-        timeLeft--;
-        timerDisp.innerText = timeLeft;
-        createItem();
-        
-        if(timeLeft <= 0) {
-            clearInterval(timer);
-            gameRunning = false;
-            alert(`Missão Cumprida! Sua pontuação sustentável: ${score}`);
-            startBtn.parentElement.style.display = 'flex';
-            startBtn.innerText = 'Reiniciar Tecnologia';
-            document.querySelectorAll('.item-jogo').forEach(i => i.remove());
+    const loop = setInterval(() => {
+        createTarget();
+        if (Math.random() > 0.5) createTarget(); // Dobra a dificuldade às vezes
+    }, 800);
+
+    const countdown = setInterval(() => {
+        time--;
+        timerEl.innerText = time;
+
+        if (time <= 0) {
+            clearInterval(loop);
+            clearInterval(countdown);
+            endGame();
         }
     }, 1000);
-};
+}
+
+function endGame() {
+    gameActive = false;
+    alert(`Operação Concluída!\nPontuação de Sustentabilidade: ${score}`);
+    overlay.style.display = 'flex';
+    startBtn.innerText = 'REINICIAR OPERAÇÃO';
+    document.querySelectorAll('.game-obj').forEach(obj => obj.remove());
+}
+
+startBtn.addEventListener('click', startGame);
