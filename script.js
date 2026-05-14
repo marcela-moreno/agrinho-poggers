@@ -1,66 +1,68 @@
-const canvas = document.getElementById('game-canvas');
-const scoreElement = document.getElementById('score');
-const startBtn = document.getElementById('start-btn');
+const gameArea = document.getElementById('game-area');
+const scoreDisplay = document.getElementById('score-val');
+const timeDisplay = document.getElementById('time-val');
+const btnStart = document.getElementById('btn-start');
 
 let score = 0;
-let gameActive = false;
+let timeLeft = 20;
+let gameInterval;
 
-const items = [
-    { emoji: '🌱', points: 10, type: 'good' },
-    { emoji: '🛸', points: 15, type: 'good' }, // Drone
-    { emoji: '💧', points: 10, type: 'good' },
-    { emoji: '🔥', points: -20, type: 'bad' }  // Desperdício/Queimada
+// Itens do jogo: Emoji, Pontos
+const elements = [
+    { txt: '🌱', pts: 10 },
+    { txt: '💧', pts: 10 },
+    { txt: '🛸', pts: 20 }, // Drone
+    { txt: '🔥', pts: -30 } // Evitar!
 ];
 
-function createItem() {
-    if (!gameActive) return;
-
-    const itemData = items[Math.floor(Math.random() * items.length)];
+function spawnItem() {
     const item = document.createElement('div');
+    const type = elements[Math.floor(Math.random() * elements.length)];
     
-    item.className = 'target';
-    item.innerText = itemData.emoji;
+    item.className = 'item-jogo';
+    item.innerText = type.txt;
     
-    // Posição aleatória
-    const x = Math.random() * (canvas.offsetWidth - 50);
-    const y = Math.random() * (canvas.offsetHeight - 50);
-    
-    item.style.left = x + 'px';
-    item.style.top = y + 'px';
+    // Calcula posição aleatória dentro da área do jogo
+    const posX = Math.random() * (gameArea.clientWidth - 50);
+    const posY = Math.random() * (gameArea.clientHeight - 80) + 40;
 
-    item.onclick = () => {
-        score += itemData.points;
-        scoreElement.innerText = `Pontos: ${score}`;
-        item.remove();
-        if(itemData.type === 'bad') {
-            canvas.style.backgroundColor = '#ffcdd2';
-            setTimeout(() => canvas.style.backgroundColor = '#fff', 200);
-        }
+    item.style.left = posX + 'px';
+    item.style.top = posY + 'px';
+
+    item.onclick = function() {
+        score += type.pts;
+        scoreDisplay.innerText = score;
+        this.remove();
     };
 
-    canvas.appendChild(item);
+    gameArea.appendChild(item);
 
-    // Remove o item após 2 segundos se não for clicado
-    setTimeout(() => {
-        if (item.parentNode) item.remove();
-    }, 2000);
+    // Remove o item sozinho após 1.5 segundos se ninguém clicar
+    setTimeout(() => { if(item) item.remove(); }, 1500);
 }
 
-startBtn.addEventListener('click', () => {
+function startGame() {
     score = 0;
-    scoreElement.innerText = `Pontos: ${score}`;
-    gameActive = true;
-    startBtn.style.display = 'none';
-    
-    // Criar itens a cada 800ms
-    const gameInterval = setInterval(createItem, 800);
+    timeLeft = 20;
+    scoreDisplay.innerText = score;
+    timeDisplay.innerText = timeLeft;
+    btnStart.style.display = 'none';
 
-    // Jogo dura 30 segundos
-    setTimeout(() => {
-        gameActive = false;
-        clearInterval(gameInterval);
-        alert(`Fim de jogo! Você ajudou o Agro a ser mais sustentável com ${score} pontos.`);
-        startBtn.style.display = 'inline-block';
-        startBtn.innerText = 'Jogar Novamente';
-    }, 30000);
-});
+    gameInterval = setInterval(() => {
+        spawnItem();
+        timeLeft--;
+        timeDisplay.innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(gameInterval);
+            gameActive = false;
+            alert("Fim da Missão! Pontuação final: " + score);
+            btnStart.style.display = 'block';
+            btnStart.innerText = 'Tentar Novamente';
+            // Limpa itens restantes
+            document.querySelectorAll('.item-jogo').forEach(i => i.remove());
+        }
+    }, 1000);
+}
+
+btnStart.addEventListener('click', startGame);
